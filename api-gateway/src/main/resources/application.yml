@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #Enrutamiento automático
+          lower-case-service-id: true #Evita errores por mayusculas
+
+server:
+  port: 8080 #Puerto que se asigna
+
+
+eureka:
+  client:
+    service-url: #dónde está eureka
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true #se registra en eureka
+    fetch-registry: true #Descubre otros servicios
+
+  instance:
+    prefer-ip-address: true #Usa IP real
+    instance-id: ${spring.application.name}:${random.value} #ID único por instancia
+

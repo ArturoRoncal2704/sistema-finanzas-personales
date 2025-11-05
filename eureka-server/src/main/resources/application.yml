@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: eureka-server
+
+server:
+  port: 8761 #Puerto asignado
+
+eureka:
+  client:
+    register-with-eureka: false # No se registra a sí mismo
+    fetch-registry: false # No necesita obtener la lista de servicios
+  server:
+    enable-self-preservation: false # Elimina instancias muertas rápido
+    eviction-interval-timer-in-ms: 5000 # Cada 5 segundos se limpia los registros caidos
