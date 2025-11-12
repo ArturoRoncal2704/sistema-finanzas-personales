@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "budgets", indexes = {
+    //Crea índices en columnas usadas frecuentemente en búsquedas, como user_id, start_date, end_date, o is_active.
     @Index(name = "idx_user_id", columnList = "user_id"),
     @Index(name = "idx_dates", columnList = "start_date, end_date"),
     @Index(name = "idx_active", columnList = "is_active")
@@ -33,7 +34,8 @@ public class Budget {
     
     @Column(name = "category_id")
     private Long categoryId;
-    
+
+    //Permite valores con 2 decimales
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
     
@@ -44,11 +46,14 @@ public class Budget {
     private LocalDate endDate;
     
     @Enumerated(EnumType.STRING)
+    //Se guarda por String no por digito
     @Column(nullable = false)
-    private BudgetPeriod period = BudgetPeriod.MENSUAL;
-    
+    private BudgetPeriod period = BudgetPeriod.MENSUAL; //valor por defecto mensual
+
+
     @Column(name = "alert_threshold", precision = 5, scale = 2)
-    private BigDecimal alertThreshold = new BigDecimal("80.00");
+    private BigDecimal alertThreshold = new BigDecimal("80.00"); //Porcentaje de gasto a partir del cual se activa una alerta
+    //Valor por defecto 80%
     
     @Column(name = "is_active")
     private Boolean isActive = true;

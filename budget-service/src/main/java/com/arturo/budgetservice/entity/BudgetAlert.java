@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "budget_alerts", indexes = {
+        //Agrega índices en user_id (para buscar alertas por usuario)
+        // y en is_read (para filtrar alertas leídas/no leídas rápidamente).
     @Index(name = "idx_user_id", columnList = "user_id"),
     @Index(name = "idx_is_read", columnList = "is_read")
 })
@@ -30,9 +32,10 @@ public class BudgetAlert {
     private Long userId;
     
     @Enumerated(EnumType.STRING)
+    //Se guarda el nombre en string no por digito
     @Column(nullable = false)
     private AlertType type;
-    
+
     @Column(name = "percentage_used", precision = 5, scale = 2, nullable = false)
     private BigDecimal percentageUsed;
     

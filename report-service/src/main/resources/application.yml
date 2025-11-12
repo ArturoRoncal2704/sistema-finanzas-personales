@@ -1,0 +1,23 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: report-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true # Descubre otros servicios
+    register-with-eureka: true # Se registra en eureka
+  instance:
+    prefer-ip-address: true # Usa su IP real
+
+# Configuración de Feign Client
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
