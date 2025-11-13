@@ -53,6 +53,7 @@ spring:
               lower-case-service-id: true
               enabled: true
 
+
 server:
   port: 8080 #Puerto que se asigna
 
@@ -64,8 +65,30 @@ eureka:
     register-with-eureka: true #se registra en eureka
     fetch-registry: true #Descubre otros servicios
   instance:
-    prefer-ip-address: true #Usa IP real
+    prefer-ip-address: true
 
 jwt:
   secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30 # Clave secreta usada para firmar y verificar tokens JWT
   expiration: 86400000 # Tiempo de expiración del token en milisegundos
+
+logging:
+  level:
+    com.sfp.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+---
+  spring:
+    config:
+      activate:
+        on-profile: docker
+
+  eureka:
+    client:
+      service-url:
+        defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+    instance:
+      hostname: api-gateway
+      prefer-ip-address: false
+
+  jwt:
+    secret: ${JWT_SECRET}

@@ -9,15 +9,33 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-    fetch-registry: true # Descubre otros servicios
-    register-with-eureka: true # Se registra en eureka
+    fetch-registry: true
+    register-with-eureka: true
   instance:
-    prefer-ip-address: true # Usa su IP real
+    prefer-ip-address: true
 
-# Configuración de Feign Client
 feign:
   client:
     config:
       default:
         connectTimeout: 10000
         readTimeout: 10000
+
+logging:
+  level:
+    com.sfp.reportservice: DEBUG
+    org.springframework.web: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    hostname: report-service
+    prefer-ip-address: false

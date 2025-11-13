@@ -12,3 +12,14 @@ eureka:
   server:
     enable-self-preservation: false # Elimina instancias muertas rápido
     eviction-interval-timer-in-ms: 5000 # Cada 5 segundos se limpia los registros caidos
+  instance:
+    prefer-ip-address: true
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+eureka:
+  instance:
+    hostname: eureka-server

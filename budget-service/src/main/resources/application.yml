@@ -1,36 +1,60 @@
+server:
+  port: 8083
+
 spring:
   application:
     name: budget-service
+
   datasource:
-    url: jdbc:mysql://localhost:3306/budget_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true # La direccion y base de datos "auth_db"
-    username: root # credencial del usuario mysql
-    password: mysql # password del usuario mysql
-    driver-class-name: com.mysql.cj.jdbc.Driver # controlador de spring para hablar con Mysql
+    url: jdbc:mysql://localhost:3306/budget_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update # Crea o actualiza las tablas automaticamente según tus  clases Entity
-    show-sql: true #Muestra las consultas SQL en la consola
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect # Indica el moto de base de datos
-        format_sql: true #Formatea las consultas para que sean legibles
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-    fetch-registry: true # Descubre otros servicios
-    register-with-eureka: true # Se registra en eureka
+    fetch-registry: true
+    register-with-eureka: true
   instance:
-    prefer-ip-address: true # Usa su IP real
+    prefer-ip-address: true
 
-#Configuración de Feign Client
 feign:
   client:
     config:
       default:
-        connecTimeout: 5000
+        connectTimeout: 5000
         readTimeout: 5000
 
-server:
-  port: 8083
+logging:
+  level:
+    com.sfp.budgetservice: DEBUG
+    org.springframework.web: DEBUG
+
+---
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  config:
+    activate:
+      on-profile: docker
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    hostname: budget-service
+    prefer-ip-address: false
