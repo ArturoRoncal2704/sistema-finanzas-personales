@@ -16,11 +16,6 @@ services:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - sfp-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   # Eureka Server
   eureka-server:
@@ -32,11 +27,6 @@ services:
       - "8761:8761"
     networks:
       - sfp-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
@@ -52,9 +42,9 @@ services:
       - sfp-network
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=${AUTH_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
@@ -76,9 +66,9 @@ services:
       - sfp-network
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
       eureka-server:
-        condition: service_healthy
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=${TRANSACTION_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
@@ -99,9 +89,9 @@ services:
       - sfp-network
     depends_on:
       mysql:
-        condition: service_healthy
+        condition: service_started
       eureka-server:
-        condition: service_healthy
+        condition: service_started
       transaction-service:
         condition: service_started
     environment:
@@ -124,7 +114,7 @@ services:
       - sfp-network
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
       transaction-service:
         condition: service_started
       budget-service:
@@ -146,7 +136,7 @@ services:
       - sfp-network
     depends_on:
       eureka-server:
-        condition: service_healthy
+        condition: service_started
       auth-service:
         condition: service_started
       transaction-service:

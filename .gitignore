@@ -1,0 +1,22 @@
+# Archivos y carpetas de entorno
+.env
+*.env
+
+# Configuración de IDEs
+.idea/
+*.iml
+
+# Archivos de compilación
+target/
+out/
+build/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
