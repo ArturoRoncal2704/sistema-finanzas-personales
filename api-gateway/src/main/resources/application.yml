@@ -8,13 +8,20 @@ spring:
       server:
         webflux:
           routes:
-            # Auth Service - Rutas públicas
-                    - id: auth-service-public
+                    # Auth Service - Rutas públicas
+                    - id: auth-service-public-login
                       uri: lb://auth-service
                       predicates:
-                        - Path=/auth/register, /auth/login
+                        - Path=/auth/login
                       filters:
-                        - RewritePath=/auth/(?<segment>.*), /auth/$\{segment}
+                        - RewritePath=/auth/(?<segment>.*), /auth/${segment}
+
+                    - id: auth-service-public-register
+                      uri: lb://auth-service
+                      predicates:
+                        - Path=/auth/register
+                      filters:
+                        - RewritePath=/auth/(?<segment>.*), /auth/${segment}
 
                     # Auth Service - Rutas protegidas
                     - id: auth-service-protected
@@ -68,7 +75,7 @@ eureka:
     prefer-ip-address: true
 
 jwt:
-  secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30 # Clave secreta usada para firmar y verificar tokens JWT
+  secret: ${JWT_SECRET}
   expiration: 86400000 # Tiempo de expiración del token en milisegundos
 
 logging:

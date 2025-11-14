@@ -30,7 +30,7 @@ eureka:
     prefer-ip-address: true
 
 jwt:
-  secret: SFP_Auth_Service_Secret_Key_2024_For_Development_Only_Do_Not_Use_In_Production
+  secret: ${JWT_SECRET}
   expiration: 86400000
 
 logging:
