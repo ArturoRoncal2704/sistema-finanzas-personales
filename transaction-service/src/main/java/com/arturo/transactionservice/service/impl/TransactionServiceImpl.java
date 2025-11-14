@@ -212,29 +212,20 @@ public class TransactionServiceImpl implements TransactionService {
                 ingresosPorCategoria
         );
     }
-    
-    @Override
-    //Calcula cuanto se ha gastado en una categoría específica(o en general)
-    public BigDecimal calculateSpentAmount(Long userId, Long categoryId, LocalDate startDate, 
-                                          LocalDate endDate) {
-        if (categoryId == null) {
-            // Si no hay categoría, calcular total de gastos
-            return transactionRepository.calculateTotalByTypeAndDateRange(
-                    userId, TransactionType.GASTO, startDate, endDate);
-        }
-        // Filtrar por categoría específica
-        Page<Transaction> transactions = transactionRepository.findByUserIdAndCategoryId(
-                userId, categoryId, Pageable.unpaged());
 
-        return transactions.stream()
-                //Filtrar solo transacciones de tipo GASTO.
-                .filter(t -> t.getType() == TransactionType.GASTO)
-                //Verificar que estén dentro del rango de fechas.
-                .filter(t -> !t.getTransactionDate().isBefore(startDate) && 
-                            !t.getTransactionDate().isAfter(endDate))
-                .map(Transaction::getAmount)
-                //Sumar los montos con:
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    @Override
+    public BigDecimal calculateSpentAmount(Long userId, Long categoryId, LocalDate startDate,
+                                           LocalDate endDate) {
+        log.info("Calculando el importe gastado por el usuario {} - categoría: {} desde {} hasta {}",
+                userId, categoryId, startDate, endDate);
+
+        return transactionRepository.calculateSpentByCategoryAndDateRange(
+                userId,
+                categoryId,  // Puede ser null (el query lo maneja)
+                TransactionType.GASTO,
+                startDate,
+                endDate
+        );
     }
     
     private TransactionResponse mapToResponse(Transaction transaction) {
