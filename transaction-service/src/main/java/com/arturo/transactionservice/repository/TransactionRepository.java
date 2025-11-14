@@ -2,11 +2,11 @@ package com.arturo.transactionservice.repository;
 
 import com.arturo.transactionservice.entity.Transaction;
 import com.arturo.transactionservice.enums.TransactionType;
-import feign.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -90,4 +90,23 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // Contar transacciones por usuario
     long countByUserId(Long userId);
+
+    //  AGREGAR ESTE MÉTODO AL FINAL
+    //Calcula el monto total gastado en una categoría específica (o todas)
+    //dentro de un rango de fechas.
+    // Si categoryId es null, calcula el total de gastos sin filtrar por categoría.
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
+            "WHERE t.userId = :userId " +
+            "AND (:categoryId IS NULL OR t.category.id = :categoryId) " +
+            "AND t.type = :type " +
+            "AND t.transactionDate BETWEEN :startDate AND :endDate")
+    BigDecimal calculateSpentByCategoryAndDateRange(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
+            @Param("type") TransactionType type,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
 }
