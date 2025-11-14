@@ -1,5 +1,6 @@
 package com.arturo.authservice.controller;
 
+import com.arturo.authservice.dto.request.ChangePasswordRequest;
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
 import com.arturo.authservice.dto.request.UpdateProfileRequest;
@@ -67,4 +68,14 @@ public class AuthController {
         UserDTO response = authService.updateProfile(userId, request);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<MessageResponse> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            @RequestHeader("X-User-Id") Long userId) {
+        log.info("Solicitud de cambio de contraseña para el usuario: {}", userId);
+        authService.changePassword(userId, request);
+        return ResponseEntity.ok(new MessageResponse("Contraseña actualizada correctamente"));
+    }
+
 }
