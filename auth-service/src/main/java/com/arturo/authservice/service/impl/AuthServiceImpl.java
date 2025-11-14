@@ -1,5 +1,6 @@
 package com.arturo.authservice.service.impl;
 
+import com.arturo.authservice.dto.request.ChangePasswordRequest;
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
 import com.arturo.authservice.dto.request.UpdateProfileRequest;
@@ -147,6 +148,24 @@ public class AuthServiceImpl implements AuthService {
         log.info("Perfil actualizado con éxito para la usuario: {}", userId);
 
         return mapToUserDTO(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        log.info("Cambiando contraseña para el usuario: {}", userId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        // Verificar contraseña actual
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BadRequestException("La contraseña actual es incorrecta");
+        }
+        // Actualizar contraseña
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        log.info("Contraseña cambiada exitosamente para el usuario: {}", userId);
     }
 
 

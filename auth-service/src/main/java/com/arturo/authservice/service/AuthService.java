@@ -1,5 +1,6 @@
 package com.arturo.authservice.service;
 
+import com.arturo.authservice.dto.request.ChangePasswordRequest;
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
 import com.arturo.authservice.dto.request.UpdateProfileRequest;
@@ -18,5 +19,7 @@ public interface AuthService {
     UserDTO getCurrentUser(String username);
 
     UserDTO updateProfile(Long userId, UpdateProfileRequest request);
+
+    void changePassword(Long userId, ChangePasswordRequest request);
 }
 
