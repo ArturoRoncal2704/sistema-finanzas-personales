@@ -2,6 +2,7 @@ package com.arturo.authservice.service;
 
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
+import com.arturo.authservice.dto.request.UpdateProfileRequest;
 import com.arturo.authservice.dto.response.AuthResponse;
 import com.arturo.authservice.dto.response.UserDTO;
 
@@ -15,5 +16,7 @@ public interface AuthService {
     AuthResponse login(LoginRequest request);
     //Obtiene los datos del usuario autenticado desde la BD
     UserDTO getCurrentUser(String username);
+
+    UserDTO updateProfile(Long userId, UpdateProfileRequest request);
 }
 

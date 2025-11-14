@@ -2,6 +2,7 @@ package com.arturo.authservice.service.impl;
 
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
+import com.arturo.authservice.dto.request.UpdateProfileRequest;
 import com.arturo.authservice.dto.response.AuthResponse;
 import com.arturo.authservice.dto.response.UserDTO;
 import com.arturo.authservice.entity.User;
@@ -11,6 +12,7 @@ import com.arturo.authservice.exception.ResourceNotFoundException;
 import com.arturo.authservice.repository.UserRepository;
 import com.arturo.authservice.security.JwtTokenProvider;
 import com.arturo.authservice.service.AuthService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -125,18 +127,39 @@ public class AuthServiceImpl implements AuthService {
         //Buscar el usuario en BD
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        //Convertir a DTO
-        return new UserDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getRole(),
-                user.getEnabled(),
-                user.getCreatedAt()
-        );
+        return mapToUserDTO(user);
     }
     //Get user
     //-> busca en BD -> devuelve DTO sin contraseña
+
+    @Override
+    @Transactional
+    public UserDTO updateProfile(Long userId, UpdateProfileRequest request) {
+        log.info("Actualizando el perfil del usuario: {}", userId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+
+        User updatedUser = userRepository.save(user);
+        log.info("Perfil actualizado con éxito para la usuario: {}", userId);
+
+        return mapToUserDTO(updatedUser);
+    }
+
+
+    private UserDTO mapToUserDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setRole(user.getRole());
+        dto.setEnabled(user.getEnabled());
+        dto.setCreatedAt(user.getCreatedAt());
+        return dto;
+    }
 }

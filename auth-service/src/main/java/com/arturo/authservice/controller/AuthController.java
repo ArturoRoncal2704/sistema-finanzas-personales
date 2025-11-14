@@ -2,7 +2,9 @@ package com.arturo.authservice.controller;
 
 import com.arturo.authservice.dto.request.LoginRequest;
 import com.arturo.authservice.dto.request.RegisterRequest;
+import com.arturo.authservice.dto.request.UpdateProfileRequest;
 import com.arturo.authservice.dto.response.AuthResponse;
+import com.arturo.authservice.dto.response.MessageResponse;
 import com.arturo.authservice.dto.response.UserDTO;
 import com.arturo.authservice.service.AuthService;
 import jakarta.validation.Valid;
@@ -54,5 +56,15 @@ public class AuthController {
         //Busca la información del usuario en la BD.
         return ResponseEntity.ok(userDTO);
         //Devuelve la información con estado 200 OK.
+    }
+
+    //Actualizar perfil
+    @PutMapping("/profile")
+    public ResponseEntity<UserDTO> updateProfile(
+            @Valid @RequestBody UpdateProfileRequest request,
+            @RequestHeader("X-User-Id") Long userId) {
+        log.info("Solicitud de actualización de perfil de usuario: {}", userId);
+        UserDTO response = authService.updateProfile(userId, request);
+        return ResponseEntity.ok(response);
     }
 }
